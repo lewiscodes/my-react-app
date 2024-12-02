@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import CharacterInfo from "./components/characterInfo"
+import Characters from "./components/characters"
 import "./App.css";
 
 // create a simple app  to cosume the Rick and Morty API
@@ -14,10 +17,44 @@ import "./App.css";
 //    (name and height)
 
 export default function App() {
+  const getCharacterData = async (characterId) => {
+    const result = await (
+      await fetch(`https://pokeapi.co/api/v2/pokemon/${characterId}`)
+    ).json();
+    return result;
+  };
+
+  const [characters, setCharacters] = useState([]);
+  const [selectedCharacterId, setSelectedCharacterId] = useState();
+
+  useEffect(() => {
+    const getFirstCharacter = async () => {
+      const character = await getCharacterData(1);
+      setCharacters([character]);
+    };
+
+    getFirstCharacter();
+  }, []);
+
+  if (!characters.length) {
+    return <div>loading...</div>;
+  }
+
+  const handleButtonClick = async () => {
+    const character = await getCharacterData(characters.length + 1);
+    setCharacters((state) => [...state, character]);
+  };
+
   return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
+    <div>
+      <button onClick={handleButtonClick}>Load New Character</button>
+      <Characters
+        characters={characters}
+        onCharacterClick={setSelectedCharacterId}
+      />
+      <CharacterInfo
+        character={characters.find((c) => c.id === selectedCharacterId)}
+      />
     </div>
   );
 }
