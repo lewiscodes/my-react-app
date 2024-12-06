@@ -1,6 +1,6 @@
 import "./App.css";
 
-// create a simple app  to cosume the Rick and Morty API
+// create a simple app  to cosume the Pokemon API
 // (https://pokeapi.co/docs/v2#pokemon)
 
 // 1. get the first character on app load
